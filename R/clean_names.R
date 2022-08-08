@@ -460,7 +460,11 @@ standardise_names <- function(taxon_names) {
   }
   
   taxon_names %>%
-    ## Weird formattring
+    ## convert to UTF8, remove weird characters
+    stringr::str_conv("UTF8") %>%
+    f("�", " " ) %>%
+    
+    ## Weird formatting
     f("[\\n\\t]", " ") %>%
     
     ## Capitalise first letter
@@ -495,8 +499,10 @@ standardise_names <- function(taxon_names) {
     ## remove " s.l" or " s.s." if present
     f("\\ssl(\\s|$)", "\\1") %>%
     f("\\ss\\.l\\.(\\s|$)", "\\1") %>%
+    f("\\ss\\.\\slat\\.(\\s|$)", "\\1") %>%
     f("\\sss(\\s|$)", "") %>%
     f("\\ss\\.s\\.(\\s|$)", "\\1") %>%
+    
     
     ## clean white space
     stringr::str_squish()
